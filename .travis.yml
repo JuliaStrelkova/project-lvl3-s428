@@ -9,3 +9,10 @@ script:
   - make test
 env:
   - APP_NAME=page-analyzer
+deploy:
+  provider: heroku
+  api_key:
+    secure: tpO8sXw1Ss1JSFyReqiR8f+XvV7ZDSVat1i+3SDBPZ2nMqExSFj4RjcQnWLL4tO17qlEnyDlRp9ITkymsqIReWzKSrjvGL4wyLKkzG8yyA6fvzkWtXyHxC1SeZfASnpOh/x7EdSkRvzqtJoGIQf7C025RNWz1rn7wW4PAovlEm7S3xW8GU0MYfDEbwyWgTv/xgnJzuoPPjwu3wX3OUcXeimjihHpjrYqSP7isMKReH+eL0fdn1H1mXpiHJZ9D9HT2FF33FEySNfVkz9wFbJJR2vi1h5SgwqEp7DzteFybmjI0K/b5PY48suG5PG8g4MbWeWKxWThu5JixXPxSHmCfklL3gRkud2ZFMdClfzYMpY1QqyJRr/mUeVfZQyfbjqvEdQQky5QC9B8KZVeWzou3zoT55gpGqhA+JK3hVoUmDF8i4OaB381SNawGEzKz7Zt7YWu9ZQC1cgFSZf8elh9kFqkfqFKMz5q/bh4xqVDPEzZN2GRw5mRzRmxxLA7O+Xag6uVVFd8omS/Wqbnfxto6ZnbwPTr4hHZb+P9tQoQGXyewIhNElzklNgUW0XMuQW3lRoxi6U5dvQAtn+TiAseuOOgWG66SAT2lrjgf/8DTFAz/ubP9EFEFghUanvUYT9DGG0VImwXS6fhIsuxDLI1dPIOwc9vGFmWs+UgecL5Mro=
+  app: simple-page-analyzer
+  on:
+    repo: JuliaStrelkova/project-lvl3-s428

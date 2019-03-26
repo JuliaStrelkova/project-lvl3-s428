@@ -7,3 +7,5 @@ install: make install
 script:
   - make lint
   - make test
+env:
+  - APP_NAME=page-analyzer

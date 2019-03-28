@@ -1,5 +1,6 @@
 <?php
-$connection = env('DB_CONNECTION') ? 'pgsql' : 'sqlite';
+$dbopts = parse_url(env('DATABASE_URL'));
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -11,26 +12,27 @@ return [
     | you may use many connections at once using the Database library.
     |
     */
-    'default' => $connection,
+    'default' => env('DB_CONNECTION') ?? $dbopts["scheme"],
 
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => ':memory:',
+            'database' => env('DB_DATABASE', ':memory:'),
             'prefix' => env('DB_PREFIX', ''),
         ],
         'pgsql' => [
-           'driver' => env('DB_CONNECTION'),
-           'host' => env('DB_HOST'),
-           'port' => env('DB_PORT'),
-           'database' => env('DB_DATABASE'),
-           'username' => env('DB_USERNAME'),
-           'password' => env('DB_PASSWORD'),
-           'charset' => env('DB_CHARSET', 'utf8'),
-           'prefix' => env('DB_PREFIX', ''),
-           'schema' => env('DB_SCHEMA', 'public'),
-           'sslmode' => env('DB_SSL_MODE', 'prefer'),
-       ],
+            'driver' => 'pgsql',
+            'host' => $dbopts["host"] ?? env('DB_CONNECTION'),
+            'port' => $dbopts["port"] ?? env('DB_PORT'),
+            'database' => ltrim($dbopts["path"] ?? '', '/') ?? env('DB_DATABASE'),
+            'username' => $dbopts["user"] ?? env('DB_USERNAME'),
+            'password' => $dbopts["pass"] ?? env('DB_PASSWORD'),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => env('DB_PREFIX', ''),
+            'schema' => env('DB_SCHEMA', 'public'),
+            'sslmode' => env('DB_SSL_MODE', 'prefer'),
+        ],
+
     ],
     'migrations' => 'migrations',
 ];

@@ -1,6 +1,5 @@
 <?php
-$connection = env('DATABASE_URL') ? 'pgsql' : 'sqlite';
-$dbopts = parse_url(env('DATABASE_URL'));
+$connection = env('DB_CONNECTION') ? 'pgsql' : 'sqlite';
 return [
     /*
     |--------------------------------------------------------------------------
@@ -21,18 +20,17 @@ return [
             'prefix' => env('DB_PREFIX', ''),
         ],
         'pgsql' => [
-            'driver' => 'pgsql',
-            'host' => $dbopts["host"] ?? '',
-            'port' => $dbopts["port"] ?? '',
-            'database' => ltrim($dbopts["path"] ?? '', '/'),
-            'username' => $dbopts["user"] ?? '',
-            'password' => $dbopts["pass"] ?? '',
-            'charset' => env('DB_CHARSET', 'utf8'),
-            'prefix' => env('DB_PREFIX', ''),
-            'schema' => env('DB_SCHEMA', 'public'),
-            'sslmode' => env('DB_SSL_MODE', 'prefer'),
-        ],
-
+           'driver' => env('DB_CONNECTION'),
+           'host' => env('DB_HOST'),
+           'port' => env('DB_PORT'),
+           'database' => env('DB_DATABASE'),
+           'username' => env('DB_USERNAME'),
+           'password' => env('DB_PASSWORD'),
+           'charset' => env('DB_CHARSET', 'utf8'),
+           'prefix' => env('DB_PREFIX', ''),
+           'schema' => env('DB_SCHEMA', 'public'),
+           'sslmode' => env('DB_SSL_MODE', 'prefer'),
+       ],
     ],
     'migrations' => 'migrations',
 ];

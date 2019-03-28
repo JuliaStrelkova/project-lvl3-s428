@@ -6,10 +6,7 @@ script:
   - make lint
   - make test
 env:
-  - APP_NAME=page-analyzer
-  - APP_ENV=staging
-  - APP_DEBUG=false
-  - DB_CONNECTION=sqlite
+  - APP_NAME=page-analyzer APP_ENV=staging APP_DEBUG=false DB_CONNECTION=sqlite
 
 deploy:
   provider: heroku

@@ -29,4 +29,11 @@ class DomainsControllerTest extends TestCase
 
         $this->seeInDatabase('domains', ['name' => 'test.domain.name']);
     }
+
+    public function testFailAddingNewDomain()
+    {
+        $this->post('/domains', ['domain' => null]);
+
+        $this->assertContains('The domain field is required', $this->response->getContent());
+    }
 }

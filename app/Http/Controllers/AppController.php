@@ -12,15 +12,16 @@ class AppController extends BaseController
 {
     public function showIndex()
     {
-        return redirect('/domains', Response::HTTP_MOVED_PERMANENTLY);
+        return redirect(route('domains.createForm'), Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    public function showForm()
+    public function showCreateForm
+()
     {
         return view('layouts.form', ['name' => 'form']);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), ['domain' => 'required|max:255']);
         if ($validator->fails()) {
@@ -38,14 +39,16 @@ class AppController extends BaseController
                 ]
             );
 
-        return redirect('/domains/' . $id);
+        //return redirect('/domains/' . $id);
+
+        return redirect()->route('domains.show',['id'=> $id]);
     }
 
-    public function showDomain(string $id)
+    public function show(string $id)
     {
         $domain = DB::table('domains')->where('id', $id)->first();
         if (!$domain) {
-            return redirect('/domains');
+            return redirect()->route('domains.createForm');
         }
 
         return view(

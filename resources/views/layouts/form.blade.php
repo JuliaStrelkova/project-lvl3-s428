@@ -3,7 +3,7 @@
 @section('title', 'Form')
 
 @section('content')
-    <form method="post" action="/domains" class="lead">
+    <form method="post" action= {{route('domains.createForm')}} class="lead">
         <div class="form-group">
             <?php if (isset($errors) && count($errors) > 0): ?>
             <div class="alert alert-danger">

@@ -11,7 +11,7 @@
 |
 */
 
-$router->get('/', 'AppController@showIndex');
-$router->get('/domains', 'AppController@showForm');
-$router->post('/domains', 'AppController@create');
-$router->get('/domains/{id}', 'AppController@showDomain');
+$router->get('/', ['as'=>'index', 'uses'=>'AppController@showIndex']);
+$router->get('/domains',['as'=> 'domains.createForm','uses'=> 'AppController@showCreateForm']);
+$router->post('/domains',['as'=>'domains.store', 'uses'=> 'AppController@store']);
+$router->get('/domains/{id}',['as'=>'domains.show','uses'=> 'AppController@show']);

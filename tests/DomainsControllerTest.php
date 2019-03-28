@@ -35,5 +35,4 @@ class DomainsControllerTest extends TestCase
         $this->post('/domains', ['domain' => null]);
 
         $this->assertContains('The domain field is required', $this->response->getContent());
-    }
-}
+    }}

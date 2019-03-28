@@ -15,8 +15,7 @@ class AppController extends BaseController
         return redirect(route('domains.createForm'), Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    public function showCreateForm
-()
+    public function showCreateForm()
     {
         return view('layouts.form', ['name' => 'form']);
     }
@@ -41,7 +40,7 @@ class AppController extends BaseController
 
         //return redirect('/domains/' . $id);
 
-        return redirect()->route('domains.show',['id'=> $id]);
+        return redirect()->route('domains.show', ['id' => $id]);
     }
 
     public function show(string $id)

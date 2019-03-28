@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use PageAnalyzer\Domain;
 
 class DomainsController extends BaseController
 {
     public function showIndex(Request $request)
     {
         $errors = json_decode($request->session()->get('errors'), true) ?? [];
-        $request->session()->reflash();
 
         return view(
             'form',
@@ -49,12 +49,7 @@ class DomainsController extends BaseController
 
     public function show(string $id)
     {
-        $domain = DB::table('domains')->where('id', $id)->first();
-        if (!$domain) {
-            return redirect()->route('domains.createForm');
-        }
-
-        return view('domain', ['domain' => $domain]);
+        return view('domain', ['domain' => Domain::findOrFail($id)]);
     }
 
     public function showList(Request $request)

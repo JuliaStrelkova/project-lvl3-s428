@@ -38,4 +38,11 @@ class DomainsControllerTest extends TestCase
         $this->notSeeInDatabase('domains', ['name' => 'bad.domain']);
         $this->assertResponseStatus(Response::HTTP_FOUND);
     }
+
+    public function testDomainsList()
+    {
+        factory(Domain::class, 50)->create();
+        $thisPage = (new Domain())->paginate(10);
+        $this->assertEquals(10, $thisPage->count());
+    }
 }

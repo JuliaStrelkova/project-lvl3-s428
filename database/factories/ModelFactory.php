@@ -11,9 +11,13 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => $faker->email,
-    ];
-});
+$factory->define(
+    PageAnalyzer\Domain::class,
+    static function (Faker\Generator $faker) {
+        return [
+            'name' => $faker->domainName,
+            'created_at' => $faker->dateTime,
+            'updated_at' => $faker->dateTime,
+        ];
+    }
+);

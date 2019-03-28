@@ -5,6 +5,7 @@
     "type": "project",
     "require": {
         "php": ">=7.3.0",
+        "illuminate/session": "^5.8",
         "laravel/lumen-framework": "5.8.*",
         "vlucas/phpdotenv": "^3.3"
     },

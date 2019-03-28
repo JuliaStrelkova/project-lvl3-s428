@@ -15,3 +15,6 @@ run:
 
 logs:
 	tail -f storage/logs/lumen.log
+
+db:
+	psql -h localhost -d page_analyzer -U app -W

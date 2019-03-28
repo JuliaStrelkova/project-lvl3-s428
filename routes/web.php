@@ -11,4 +11,7 @@
 |
 */
 
-$router->get('/', 'AppController@show');
+$router->get('/', 'AppController@showIndex');
+$router->get('/domains', 'AppController@showForm');
+$router->post('/domains', 'AppController@create');
+$router->get('/domains/{id}', 'AppController@showDomain');

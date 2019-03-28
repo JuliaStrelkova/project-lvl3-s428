@@ -102,6 +102,8 @@ $app->router->group(
 
 if (env('APP_DEBUG', true)) {
     $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+    $app->configure('debugbar');
+    $app->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
 }
 
 return $app;

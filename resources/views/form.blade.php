@@ -3,17 +3,17 @@
 @section('title', 'Form')
 
 @section('content')
-    <form method="post" action= {{route('domains.createForm')}} class="lead">
+    <form method="post" action="{{route('domains.store')}}" class="lead">
         <div class="form-group">
-            <?php if (isset($errors) && count($errors) > 0): ?>
+            @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <ul>
-                    <?php foreach ($errors as $error): ?>
-                    <li><?= $error ?></li>
-                    <?php endforeach ?>
+                    @foreach ($errors as $error)
+                    <li>{{ $error[0] }}</li>
+                    @endforeach
                 </ul>
             </div>
-            <?php endif ?>
+            @endif
             <label for="input-domains">Введите адрес сайта, для анализа:</label>
             <input id="input-domains" class="form-control" type="text" name="domain" value=""
                    placeholder="https://some.domain.com">

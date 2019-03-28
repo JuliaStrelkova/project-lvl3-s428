@@ -13,27 +13,29 @@ class DomainsControllerTest extends TestCase
     {
         $this->get('/');
 
-        $this->assertResponseStatus(Response::HTTP_MOVED_PERMANENTLY);
-    }
-
-    public function testDomainsPage()
-    {
-        $this->get('/domains');
-
-        $this->assertResponseStatus(Response::HTTP_OK);
+        $this->assertResponseOk();
     }
 
     public function testAddNewDomain()
     {
-        $this->post('/domains', ['domain' => 'test.domain.name']);
+        $this->post('/domains', ['domain' => 'https://test.domain.name']);
 
-        $this->seeInDatabase('domains', ['name' => 'test.domain.name']);
+        $this->seeInDatabase('domains', ['name' => 'https://test.domain.name']);
     }
 
-    public function testFailAddingNewDomain()
+    public function testFailAddingEmptyDomain()
     {
         $this->post('/domains', ['domain' => null]);
 
-        $this->assertContains('The domain field is required', $this->response->getContent());
+        $this->notSeeInDatabase('domains', ['name' => null]);
+        $this->assertResponseStatus(Response::HTTP_FOUND);
+    }
+
+    public function testFailAddingInvalidDomain()
+    {
+        $this->post('/domains', ['domain' => 'bad.domain']);
+
+        $this->notSeeInDatabase('domains', ['name' => 'bad.domain']);
+        $this->assertResponseStatus(Response::HTTP_FOUND);
     }
 }

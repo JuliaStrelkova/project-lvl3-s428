@@ -57,13 +57,14 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->middleware([
+    \Illuminate\Session\Middleware\StartSession::class,
+]);
+$app->bind(\Illuminate\Session\SessionManager::class, static function () use ($app) {
+    return new \Illuminate\Session\SessionManager($app);
+});
+$app->configure('session');
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -99,11 +100,5 @@ $app->router->group(
         require __DIR__ . '/../routes/web.php';
     }
 );
-
-if (env('APP_DEBUG', true)) {
-    $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
-    $app->configure('debugbar');
-    $app->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
-}
 
 return $app;

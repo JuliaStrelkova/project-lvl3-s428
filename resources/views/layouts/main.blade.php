@@ -49,8 +49,11 @@
         </form>
     </div>
 </nav>
-<div class="jumbotron">
-    @yield('content')
-</div>
+
+<main role="main" class="container">
+    <div class="jumbotron">
+        @yield('content')
+    </div>
+</main>
 </body>
 </html>

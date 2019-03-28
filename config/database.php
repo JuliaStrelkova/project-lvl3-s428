@@ -17,7 +17,7 @@ return [
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', ':memory:'),
+            'database' => ':memory:',
             'prefix' => env('DB_PREFIX', ''),
         ],
         'pgsql' => [

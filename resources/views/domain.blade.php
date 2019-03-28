@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('title')
-    {{ $name }}
+    {{ $domain->name }}
 @endsection
 @section('content')
     <table class="table">
@@ -14,10 +14,10 @@
         </thead>
         <tbody>
         <tr>
-            <th scope="row">{{ $id }}</th>
-            <td>{{ $name }}</td>
-            <td>{{ $createdAt }}</td>
-            <td>{{ $updatedAt }}</td>
+            <th scope="row">{{ $domain->id }}</th>
+            <td>{{ $domain->name }}</td>
+            <td>{{ $domain->created_at }}</td>
+            <td>{{ $domain->updated_at }}</td>
         </tr>
         </tbody>
     </table>

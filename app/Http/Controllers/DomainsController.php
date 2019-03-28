@@ -6,25 +6,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
-use Symfony\Component\HttpFoundation\Response;
 
-class AppController extends BaseController
+class DomainsController extends BaseController
 {
-    public function showIndex()
+    public function showIndex(Request $request)
     {
-        return redirect(route('domains.createForm'), Response::HTTP_MOVED_PERMANENTLY);
-    }
-
-    public function showCreateForm()
-    {
-        return view('layouts.form', ['name' => 'form']);
+        $errors = json_decode($request->session()->get('errors'), true) ?? [];
+        $request->session()->reflash();
+        return view(
+            'form',
+            [
+                'name' => 'form',
+                'errors' => $errors,
+            ]
+        );
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), ['domain' => 'required|max:255']);
+        $validator = Validator::make($request->all(), ['domain' => 'required|url|max:255']);
+
         if ($validator->fails()) {
-            return view('layouts.form', ['errors' => $validator->errors()->all()]);
+            $request->session()->flash('errors', $validator->errors()->toJson());
+
+            return redirect()->route('index');
         }
 
         $domain = $request->get('domain');
@@ -38,8 +43,6 @@ class AppController extends BaseController
                 ]
             );
 
-        //return redirect('/domains/' . $id);
-
         return redirect()->route('domains.show', ['id' => $id]);
     }
 
@@ -50,14 +53,6 @@ class AppController extends BaseController
             return redirect()->route('domains.createForm');
         }
 
-        return view(
-            'layouts.domain',
-            [
-                'id' => $domain->id,
-                'name' => $domain->name,
-                'createdAt' => $domain->created_at,
-                'updatedAt' => $domain->updated_at
-            ]
-        );
+        return view('domain', ['domain' => $domain]);
     }
 }

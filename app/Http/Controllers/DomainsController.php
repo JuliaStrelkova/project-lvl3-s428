@@ -13,6 +13,7 @@ class DomainsController extends BaseController
     {
         $errors = json_decode($request->session()->get('errors'), true) ?? [];
         $request->session()->reflash();
+
         return view(
             'form',
             [
@@ -54,5 +55,22 @@ class DomainsController extends BaseController
         }
 
         return view('domain', ['domain' => $domain]);
+    }
+
+    public function showList(Request $request)
+    {
+        $curPage = $request->get('page', 1);
+        $domains = DB::table('domains')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+        return view(
+            'domains',
+            [
+                'nextPage' => $curPage + 1,
+                'prevPage' => $curPage - 1 < 1 ? 1 : $curPage - 1,
+                'domains' => $domains,
+            ]
+        );
     }
 }

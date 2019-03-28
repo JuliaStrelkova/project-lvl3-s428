@@ -12,5 +12,6 @@
 */
 
 $router->get('/', ['as'=>'index', 'uses'=>'DomainsController@showIndex']);
+$router->get('/domains',['as'=>'domains.list', 'uses'=> 'DomainsController@showList']);
 $router->post('/domains',['as'=>'domains.store', 'uses'=> 'DomainsController@store']);
 $router->get('/domains/{id}',['as'=>'domains.show','uses'=> 'DomainsController@show']);

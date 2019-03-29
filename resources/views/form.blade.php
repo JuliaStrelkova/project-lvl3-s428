@@ -9,7 +9,7 @@
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors as $error)
-                    <li>{{ $error[0] }}</li>
+                    <li>{{ is_array($error) ? $error[0] : $error }}</li>
                     @endforeach
                 </ul>
             </div>

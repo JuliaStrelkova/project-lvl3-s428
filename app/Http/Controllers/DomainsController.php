@@ -3,12 +3,12 @@
 namespace PageAnalyzer\Http\Controllers;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use PageAnalyzer\Model\Domain;
-use SplTempFileObject;
 
 class DomainsController extends BaseController
 {
@@ -23,7 +23,7 @@ class DomainsController extends BaseController
     {
         $errors = json_decode($request->session()->get('errors'), true) ?? [];
 
-        return view('form', ['name' => 'form', 'errors' => $errors,]);
+        return view('form', ['name' => 'form', 'errors' => $errors]);
     }
 
     public function store(Request $request)
@@ -38,7 +38,13 @@ class DomainsController extends BaseController
 
         $domain = $request->get('domain');
 
-        $response = $this->httpClient->get($domain);
+        try {
+            $response = $this->httpClient->get($domain);
+        } catch (ConnectException $e) {
+            $request->session()->flash('errors', json_encode(['Can not resolve domain ' . $domain]));
+
+            return redirect()->route('index');
+        }
         $body = $response->getBody()->getContents();
         $contentLengthHeaders = $response->getHeader('Content-Length');
 

@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Session\SessionManager;
+use Illuminate\Session\SessionServiceProvider;
+use PageAnalyzer\Provider\GuzzleHttpClientProvider;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -58,13 +63,12 @@ $app->singleton(
 */
 
 $app->middleware([
-    \Illuminate\Session\Middleware\StartSession::class,
+    StartSession::class,
 ]);
-$app->bind(\Illuminate\Session\SessionManager::class, static function () use ($app) {
-    return new \Illuminate\Session\SessionManager($app);
+$app->bind(SessionManager::class, static function () use ($app) {
+    return new SessionManager($app);
 });
 $app->configure('session');
-$app->register(\Illuminate\Session\SessionServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -77,9 +81,8 @@ $app->register(\Illuminate\Session\SessionServiceProvider::class);
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(GuzzleHttpClientProvider::class);
+$app->register(SessionServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

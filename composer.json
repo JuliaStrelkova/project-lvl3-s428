@@ -5,10 +5,12 @@
     "type": "project",
     "require": {
         "php": ">=7.3.0",
+        "ext-json": "*",
+        "doctrine/dbal": "^2.9",
+        "guzzlehttp/guzzle": "^6.3",
         "illuminate/session": "^5.8",
         "laravel/lumen-framework": "5.8.*",
-        "vlucas/phpdotenv": "^3.3",
-        "ext-json": "*"
+        "vlucas/phpdotenv": "^3.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

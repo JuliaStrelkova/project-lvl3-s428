@@ -2,25 +2,28 @@
 
 namespace PageAnalyzer\Http\Controllers;
 
+use GuzzleHttp\Client;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
-use PageAnalyzer\Domain;
+use PageAnalyzer\Model\Domain;
+use SplTempFileObject;
 
 class DomainsController extends BaseController
 {
+    private $httpClient;
+
+    public function __construct(Client $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
     public function showIndex(Request $request)
     {
         $errors = json_decode($request->session()->get('errors'), true) ?? [];
 
-        return view(
-            'form',
-            [
-                'name' => 'form',
-                'errors' => $errors,
-            ]
-        );
+        return view('form', ['name' => 'form', 'errors' => $errors,]);
     }
 
     public function store(Request $request)
@@ -35,36 +38,66 @@ class DomainsController extends BaseController
 
         $domain = $request->get('domain');
 
-        $id = DB::table('domains')
-            ->insertGetId(
-                [
-                    'name' => $domain,
-                    'created_at' => (new \DateTimeImmutable())->format(DATE_ATOM),
-                    'updated_at' => (new \DateTimeImmutable())->format(DATE_ATOM),
-                ]
-            );
+        $response = $this->httpClient->get($domain);
+        $body = $response->getBody()->getContents();
+        $contentLengthHeaders = $response->getHeader('Content-Length');
 
-        return redirect()->route('domains.show', ['id' => $id]);
+        if (!empty($contentLengthHeaders)) {
+            $contentLength = (int) $contentLengthHeaders[0];
+        } else {
+            $contentLength = mb_strlen($body);
+        }
+
+        $domain = Domain::create(
+            [
+                'name' => $domain,
+                'body' => $body,
+                'code' => $response->getStatusCode(),
+                'content_length' => $contentLength,
+            ]
+        );
+
+        return redirect()->route('domains.show', ['id' => $domain->id]);
     }
 
     public function show(string $id)
     {
-        return view('domain', ['domain' => Domain::findOrFail($id)]);
+        $domain = Domain::findOrFail($id)->toArray();
+        $domain['body'] = route('domains.download', ['id' => $domain['id']]);
+
+        return view('domain', ['domain' => $domain]);
     }
 
     public function showList(Request $request)
     {
-        $curPage = $request->get('page', 1);
-        $domains = DB::table('domains')
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $curPage = (int) $request->get('page', 1);
 
-        return view(
-            'domains',
+        /** @var LengthAwarePaginator $domains */
+        $domains = Domain::orderBy('id', 'desc')->paginate(15);
+
+        $params['domains'] = $domains;
+
+        if ($curPage > 1) {
+            $params['prevPage'] = $curPage - 1;
+        }
+
+        if ($domains->hasMorePages()) {
+            $params['nextPage'] = $curPage + 1;
+        }
+
+        return view('domains', $params);
+    }
+
+    public function downloadBody($id)
+    {
+        $domain = Domain::findOrFail($id);
+
+        return response(
+            $domain->body,
+            200,
             [
-                'nextPage' => $curPage + 1,
-                'prevPage' => $curPage - 1 < 1 ? 1 : $curPage - 1,
-                'domains' => $domains,
+                'Content-Type' => 'text/html',
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $domain->name . '.html'),
             ]
         );
     }

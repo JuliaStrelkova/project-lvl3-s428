@@ -1,24 +1,29 @@
 @extends('layouts.main')
 @section('title')
-    {{ $domain->name }}
+    {{ $domain['name'] }}
 @endsection
 @section('content')
+    <h3 class="text-center">Domain information</h3>
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">CreatedAt</th>
-            <th scope="col">UpdatedAt</th>
+            <th scope="col">Field Name</th>
+            <th scope="col">Field Value</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">{{ $domain->id }}</th>
-            <td>{{ $domain->name }}</td>
-            <td>{{ $domain->created_at }}</td>
-            <td>{{ $domain->updated_at }}</td>
-        </tr>
+        @foreach($domain as $field => $value)
+            <tr>
+                <th scope="row">{{ $field }}</th>
+                <td>
+                    @if ($field === 'body')
+                        <a href="{{ $value }}">download</a>
+                    @else
+                        {{ $value }}
+                    @endif
+                </td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 @endsection

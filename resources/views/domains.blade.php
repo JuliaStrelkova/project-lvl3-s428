@@ -21,10 +21,15 @@
         @endforeach
         </tbody>
     </table>
-    <a href="{{ route('domains.list', ['page' => $prevPage]) }}"
-       class="btn btn-outline-secondary btn-sm"
-       role="button">prev</a>
-    <a href="{{ route('domains.list', ['page' => $nextPage]) }}"
-       class="btn btn-outline-secondary btn-sm"
-       role="button">next</a>
+    @isset($prevPage)
+        <a href="{{ route('domains.list', ['page' => $prevPage]) }}"
+           class="btn btn-outline-secondary btn-sm"
+           role="button">prev</a>
+    @endisset
+
+    @isset($nextPage)
+        <a href="{{ route('domains.list', ['page' => $nextPage]) }}"
+           class="btn btn-outline-secondary btn-sm"
+           role="button">next</a>
+    @endisset
 @endsection

@@ -3,6 +3,7 @@
 namespace PageAnalyzer;
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use PageAnalyzer\Model\Domain;
 use Symfony\Component\HttpFoundation\Response;
 
 class DomainsControllerTest extends TestCase
@@ -18,9 +19,9 @@ class DomainsControllerTest extends TestCase
 
     public function testAddNewDomain()
     {
-        $this->post(route('domains.store'), ['domain' => 'https://test.domain.name']);
+        $this->post(route('domains.store'), ['domain' => 'https://mail.ru']);
 
-        $this->seeInDatabase('domains', ['name' => 'https://test.domain.name']);
+        $this->seeInDatabase('domains', ['name' => 'https://mail.ru']);
     }
 
     public function testFailAddingEmptyDomain()
@@ -41,9 +42,9 @@ class DomainsControllerTest extends TestCase
 
     public function testDomainsList()
     {
-        factory('PageAnalyzer\Domain', 5)->create();
+        factory(Domain::class, 15)->create();
 
-        $response = $this->get(route('domains.list'));
-        $response->assertResponseStatus(200);
+        $this->get(route('domains.list'));
+        $this->assertResponseStatus(200);
     }
 }

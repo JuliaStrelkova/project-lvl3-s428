@@ -11,13 +11,18 @@
 |
 */
 
+use PageAnalyzer\Model\Domain;
+
 $factory->define(
-    PageAnalyzer\Domain::class,
+    Domain::class,
     static function (Faker\Generator $faker) {
         return [
             'name' => $faker->domainName,
             'created_at' => $faker->dateTime,
             'updated_at' => $faker->dateTime,
+            'body' => $faker->randomHtml(),
+            'code' => $faker->numberBetween(100, 600),
+            'content_length' => $faker->randomNumber(),
         ];
     }
 );

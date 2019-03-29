@@ -41,8 +41,37 @@ class DomainsControllerTest extends TestCase
 
     public function testDomainsList()
     {
-        factory(Domain::class, 50)->create();
-        $thisPage = (new Domain())->paginate(10);
-        $this->assertEquals(10, $thisPage->count());
+        $domains = [
+            'https://ru.hexlet.io',
+            'https://hh.ru',
+            'https://vk.com',
+            'https://lumen.laravel.com',
+            'https://github.com',
+            'https://packagist.org',
+            'https://dashboard.heroku.com',
+            'https://travis-ci.org',
+            'https://stepik.org',
+            'https://geekbrains.ru',
+            'https://habr.com',
+            'https://moikrug.ru',
+            'https://mail.google.com',
+            'https://www.ratatype.com',
+            'https://pastebin.com'
+        ];
+        foreach ($domains as $domain) {
+            $this->post('/domains', ['domain' => $domain]);
+        }
+        $this->get('/domains?page=1');
+        $domainsPage = $this->response->getContent();
+
+        $this->assertContains('https://pastebin.com', $domainsPage);
+        $this->assertContains('https://packagist.org', $domainsPage);
+        $this->assertNotContains('https://github.com', $domainsPage);
+
+        $this->get('/domains?page=2');
+        $domainsPage = $this->response->getContent();
+
+        $this->assertContains('https://ru.hexlet.io', $domainsPage);
+        $this->assertContains('https://github.com', $domainsPage);
     }
 }

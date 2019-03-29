@@ -10,5 +10,5 @@ class Domain extends Model
 {
     protected $table = 'domains';
 
-    protected $fillable = ['name', 'content_length', 'code', 'body'];
+    protected $fillable = ['name', 'content_length', 'code', 'body', 'h1', 'keywords', 'description'];
 }

@@ -23,6 +23,9 @@ $factory->define(
             'body' => $faker->randomHtml(),
             'code' => $faker->numberBetween(100, 600),
             'content_length' => $faker->randomNumber(),
+            'h1' => $faker->title,
+            'keywords' => implode(' ', $faker->words),
+            'description' => implode(' ', $faker->words),
         ];
     }
 );

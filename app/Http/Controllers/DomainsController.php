@@ -73,7 +73,7 @@ class DomainsController extends BaseController
         return view('domain', ['domain' => $domain]);
     }
 
-    public function showList(Request $request)
+    public function showList()
     {
         $domains = Domain::orderBy('id', 'desc')->paginate(15);
 
@@ -91,7 +91,7 @@ class DomainsController extends BaseController
             200,
             [
                 'Content-Type' => 'text/html',
-                'Content-Disposition' => sprintf('attachment; filename="%s"', $domain->name.'.html'),
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $domain->name . '.html'),
             ]
         );
     }

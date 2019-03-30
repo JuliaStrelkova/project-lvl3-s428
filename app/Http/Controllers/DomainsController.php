@@ -4,7 +4,6 @@ namespace PageAnalyzer\Http\Controllers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -68,28 +67,17 @@ class DomainsController extends BaseController
 
     public function show(string $id)
     {
-        $domain = Domain::findOrFail($id)->toArray();
-        $domain['body'] = route('domains.download', ['id' => $domain['id']]);
+        $domain = Domain::findOrFail($id);
+        $domain->body = route('domains.download', ['id' => $domain->id]);
 
         return view('domain', ['domain' => $domain]);
     }
 
     public function showList(Request $request)
     {
-        $curPage = (int) $request->get('page', 1);
-
-        /** @var LengthAwarePaginator $domains */
         $domains = Domain::orderBy('id', 'desc')->paginate(15);
 
         $params['domains'] = $domains;
-
-        if ($curPage > 1) {
-            $params['prevPage'] = $curPage - 1;
-        }
-
-        if ($domains->hasMorePages()) {
-            $params['nextPage'] = $curPage + 1;
-        }
 
         return view('domains', $params);
     }
@@ -103,7 +91,7 @@ class DomainsController extends BaseController
             200,
             [
                 'Content-Type' => 'text/html',
-                'Content-Disposition' => sprintf('attachment; filename="%s"', $domain->name . '.html'),
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $domain->name.'.html'),
             ]
         );
     }

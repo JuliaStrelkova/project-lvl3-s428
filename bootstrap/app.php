@@ -3,6 +3,7 @@
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Session\SessionManager;
 use Illuminate\Session\SessionServiceProvider;
+use PageAnalyzer\Provider\DomainDataRetrievingServiceProvider;
 use PageAnalyzer\Provider\GuzzleHttpClientProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -82,6 +83,7 @@ $app->configure('session');
 */
 
 $app->register(GuzzleHttpClientProvider::class);
+$app->register(DomainDataRetrievingServiceProvider::class);
 $app->register(SessionServiceProvider::class);
 
 /*

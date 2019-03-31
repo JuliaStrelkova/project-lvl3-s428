@@ -2,20 +2,19 @@
 
 namespace PageAnalyzer\Http\Controllers;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use PageAnalyzer\Model\Domain;
+use PageAnalyzer\Service\DomainDataRetrievingService;
 
 class DomainsController extends BaseController
 {
-    private $httpClient;
+    private $domainDataRetrievingService;
 
-    public function __construct(Client $httpClient)
+    public function __construct(DomainDataRetrievingService $domainDataRetrievingService)
     {
-        $this->httpClient = $httpClient;
+        $this->domainDataRetrievingService = $domainDataRetrievingService;
     }
 
     public function showIndex(Request $request)
@@ -35,32 +34,11 @@ class DomainsController extends BaseController
             return redirect()->route('index');
         }
 
-        $domain = $request->get('domain');
+        $domainName = $request->get('domain');
 
-        try {
-            $response = $this->httpClient->get($domain);
-        } catch (ConnectException $e) {
-            $request->session()->flash('errors', json_encode(['Can not resolve domain ' . $domain]));
+        $domain = Domain::create(['name' => $domainName]);
 
-            return redirect()->route('index');
-        }
-        $body = $response->getBody()->getContents();
-        $contentLengthHeaders = $response->getHeader('Content-Length');
-
-        if (!empty($contentLengthHeaders)) {
-            $contentLength = (int) $contentLengthHeaders[0];
-        } else {
-            $contentLength = mb_strlen($body);
-        }
-
-        $domain = Domain::create(
-            [
-                'name' => $domain,
-                'body' => $body,
-                'code' => $response->getStatusCode(),
-                'content_length' => $contentLength,
-            ]
-        );
+        $this->domainDataRetrievingService->fillDomainSeoData($domain);
 
         return redirect()->route('domains.show', ['id' => $domain->id]);
     }
@@ -68,9 +46,14 @@ class DomainsController extends BaseController
     public function show(string $id)
     {
         $domain = Domain::findOrFail($id);
-        $domain->body = route('domains.download', ['id' => $domain->id]);
 
-        return view('domain', ['domain' => $domain]);
+        return view(
+            'domain',
+            [
+                'domain' => $domain,
+                'download_body_url' => route('domains.download', ['id' => $domain->id]),
+            ]
+        );
     }
 
     public function showList()

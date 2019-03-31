@@ -19,9 +19,9 @@ class DomainsControllerTest extends TestCase
 
     public function testAddNewDomain()
     {
-        $this->post(route('domains.store'), ['domain' => 'https://mail.ru']);
+        $this->post(route('domains.store'), ['domain' => 'https://localhost.dev']);
 
-        $this->seeInDatabase('domains', ['name' => 'https://mail.ru']);
+        $this->seeInDatabase('domains', ['name' => 'https://localhost.dev', 'code' => Response::HTTP_NOT_FOUND]);
     }
 
     public function testFailAddingEmptyDomain()
@@ -29,7 +29,6 @@ class DomainsControllerTest extends TestCase
         $this->post(route('domains.store'), ['domain' => null]);
 
         $this->notSeeInDatabase('domains', ['name' => null]);
-        $this->assertResponseStatus(Response::HTTP_FOUND);
     }
 
     public function testFailAddingInvalidDomain()
@@ -37,7 +36,6 @@ class DomainsControllerTest extends TestCase
         $this->post(route('domains.store'), ['domain' => 'bad.domain']);
 
         $this->notSeeInDatabase('domains', ['name' => 'bad.domain']);
-        $this->assertResponseStatus(Response::HTTP_FOUND);
     }
 
     public function testDomainsList()

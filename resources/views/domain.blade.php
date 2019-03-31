@@ -51,7 +51,7 @@
         <tr>
             <th scope="row">Body</th>
             <td>
-                <a href="{{ $domain->body_url }}">download</a>
+                <a href="{{ $downloadBodyUrl }}">download</a>
             </td>
         </tr>
         </tbody>

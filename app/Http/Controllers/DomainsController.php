@@ -38,7 +38,17 @@ class DomainsController extends BaseController
 
         $domain = Domain::create(['name' => $domainName]);
 
-        $this->domainDataRetrievingService->fillDomainSeoData($domain);
+        $domainData = $this->domainDataRetrievingService->retrieveDomainData($domain->name);
+        $domain->update(
+            [
+                'content_length' => $domainData->getContentLength(),
+                'code' => $domainData->getCode(),
+                'body' => $domainData->getBody(),
+                'h1' => $domainData->getH1(),
+                'keywords' => $domainData->getKeywords(),
+                'description' => $domainData->getDescription(),
+            ]
+        );
 
         return redirect()->route('domains.show', ['id' => $domain->id]);
     }
@@ -51,7 +61,7 @@ class DomainsController extends BaseController
             'domain',
             [
                 'domain' => $domain,
-                'download_body_url' => route('domains.download', ['id' => $domain->id]),
+                'downloadBodyUrl' => route('domains.download', ['id' => $domain->id]),
             ]
         );
     }

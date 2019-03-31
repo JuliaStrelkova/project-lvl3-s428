@@ -14,9 +14,9 @@
                 </ul>
             </div>
             @endif
-            <label for="input-domains">Введите адрес сайта, для анализа:</label>
+            <label for="input-domains">Enter page url to analyze:</label>
             <input id="input-domains" class="form-control" type="text" name="domain" value=""
-                   placeholder="https://some.domain.com">
+                   placeholder="https://some.domain.com/some-page">
             <input type="submit" class="btn btn-primary btn-lg" role="button"/>
         </div>
 

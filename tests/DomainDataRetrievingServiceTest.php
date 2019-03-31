@@ -41,7 +41,7 @@ class DomainDataRetrievingServiceTest extends TestCase
     {
         $mock = new MockHandler([
             new RequestException(
-                "Error Communicating with Server",
+                'Error Communicating with Server',
                 new Request('GET', 'https://localhost.dev'),
                 new Response(HttpResponse::HTTP_NOT_FOUND)
             ),
